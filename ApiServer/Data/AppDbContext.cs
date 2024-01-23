@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using WebApi.Models;
+using ApiServer.Models;
 
 namespace WebApp.Data;
 
@@ -10,5 +10,5 @@ public class AppDbContext : IdentityDbContext
         : base(options)
     {
     }
-    public DbSet<Property> Properties { get; set; }=null!;
+    public DbSet<Prayer> Prayers { get; set; }=null!;
 }

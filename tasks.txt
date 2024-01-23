@@ -1,2 +1,20 @@
 1)WebApp(razor page) and WebAPI share the same database
 2)Web App login use Phone Number not email.
+
+#===============================
+1)create a new repository on the command line
+echo "# dotnet_webapp_webapi" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/guomx69/dotnet_webapp_webapi.git
+git push -u origin main
+
+2)push an existing repository from the command line
+git remote add origin https://github.com/guomx69/dotnet_webapp_webapi.git
+git branch -M main
+git push -u origin main
+
+#===================================
+ Security Problems

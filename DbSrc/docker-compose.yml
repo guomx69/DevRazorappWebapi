@@ -1,0 +1,25 @@
+#https://stackoverflow.com/questions/66205577/how-do-i-add-postgis-to-my-postgresql-setup-using-pure-docker-compose
+# docker pull postgis/postgis:15-3.3
+version: '3'
+services:
+  dbGisService:
+    container_name: ${CON_NAME}
+    image: ${IMAGE_NAME}
+    restart: 'no'
+    environment:
+      POSTGRES_USER: ${PG_USER} 
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: ${PG_DB}
+    ports:
+      - "${PG_OUT_PORT}:5432"
+    volumes:
+      #- ./db:/docker-entrypoint-initdb.d/
+      - db_vol5455:/var/lib/postgresql/data
+
+volumes:
+  db_vol5455:
+    driver: local
+    driver_opts:
+          type: none
+          device: ${PWD}/${PG_OUT_DIR}
+          o: bind
