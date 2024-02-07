@@ -6,18 +6,18 @@ using System.Text;
 
 
 using ApiServer.Repository.Interfaces;
-using ApiServer.Models;
+using ApiServer.Models.DTO;
 //write the implementation of IAuthService with namespace ApiServer.Repository.Service
 namespace ApiServer.Repository.Service;
 
     //write the implementation of IAuthService with namespace ApiServer.Repository.Service
     
-    public class AuthService : IAuthService
+    public class JwtAuthService : IAuthService
     {
          private readonly UserManager<IdentityUser> _userManager;
         private readonly IConfiguration _config;
 
-        public AuthService(UserManager<IdentityUser> userManager, IConfiguration config)
+        public JwtAuthService(UserManager<IdentityUser> userManager, IConfiguration config)
         {
             _userManager = userManager;
             _config = config;

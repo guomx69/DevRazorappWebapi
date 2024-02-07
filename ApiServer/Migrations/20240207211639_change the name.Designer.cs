@@ -14,8 +14,8 @@ using WebApp.Data;
 namespace ApiServer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230531204157_initial")]
-    partial class initial
+    [Migration("20240207211639_change the name")]
+    partial class changethename
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -25,6 +25,100 @@ namespace ApiServer.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("ApiServer.Models.CityMd", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<MultiPolygon>("area")
+                        .HasColumnType("geometry");
+
+                    b.Property<DateTime>("createdUtcDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool?>("hasService")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("updatedUtcDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TestCities");
+                });
+
+            modelBuilder.Entity("ApiServer.Models.Post", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TestPosts");
+                });
+
+            modelBuilder.Entity("ApiServer.Models.PrayerMd", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("address")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("createdUtcDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<List<string>>("imageUrls")
+                        .IsRequired()
+                        .HasColumnType("text[]");
+
+                    b.Property<string>("name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Point>("point")
+                        .IsRequired()
+                        .HasColumnType("geometry");
+
+                    b.Property<DateTime>("updatedUtcDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("id");
+
+                    b.ToTable("TestPrayers");
+                });
+
+            modelBuilder.Entity("ApiServer.Models.Tag", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TestTags");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -222,52 +316,19 @@ namespace ApiServer.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("WebApi.Models.Property", b =>
+            modelBuilder.Entity("PostsToTagsJoin", b =>
                 {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("PostsId")
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
-
-                    b.Property<string>("address")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<List<string>>("imageUrls")
-                        .IsRequired()
-                        .HasColumnType("text[]");
-
-                    b.Property<bool>("isCommercial")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("isOwner")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("isRentOnly")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Point>("point")
-                        .IsRequired()
-                        .HasColumnType("geometry");
-
-                    b.Property<long>("price")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("size")
+                    b.Property<int>("TagsId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("sizeUnit")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.HasKey("PostsId", "TagsId");
 
-                    b.HasKey("id");
+                    b.HasIndex("TagsId");
 
-                    b.ToTable("Properties");
+                    b.ToTable("PostsToTagsJoin");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -317,6 +378,21 @@ namespace ApiServer.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PostsToTagsJoin", b =>
+                {
+                    b.HasOne("ApiServer.Models.Post", null)
+                        .WithMany()
+                        .HasForeignKey("PostsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ApiServer.Models.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

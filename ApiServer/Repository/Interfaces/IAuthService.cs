@@ -1,4 +1,4 @@
-using ApiServer.Models;
+using ApiServer.Models.DTO;
 //create an interface IAuthService with namespace ApiServer.Repository.Interfaces  
 namespace ApiServer.Repository.Interfaces
 {

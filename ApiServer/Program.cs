@@ -1,6 +1,7 @@
 using System.Text;
 using ApiServer.Repository.Interfaces;
 using ApiServer.Repository.Service;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -37,7 +38,11 @@ builder.Services.AddDbContext<AppDbContext>(opt=>
                     };
                 }
                 );
-builder.Services.AddTransient<IAuthService, AuthService>();
+
+// This is for basic authentication
+//builder.Services.AddAuthentication("BasicAuthentication").AddScheme<AuthenticationSchemeOptions,BasicAuthService>("BasicAuthentication",null);
+
+builder.Services.AddTransient<IAuthService, JwtAuthService>();
 
 builder.Services.AddControllers();
 

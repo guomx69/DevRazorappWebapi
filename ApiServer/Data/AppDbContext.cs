@@ -10,5 +10,16 @@ public class AppDbContext : IdentityDbContext
         : base(options)
     {
     }
-    public DbSet<Prayer> Prayers { get; set; }=null!;
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<Post>()
+            .HasMany(e => e.Tags)
+            .WithMany(e => e.Posts)
+            .UsingEntity("TestPostsToTagsJoin");
+    }
+    public DbSet<PrayerMd> TestPrayers { get; set; }=null!;
+    public DbSet<Post> TestPosts { get; set; }=null!;
+    public DbSet<Tag> TestTags { get; set; }=null!;
+    public DbSet<CityMd> TestCities { get; set; }=null!;
 }

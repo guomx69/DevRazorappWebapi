@@ -5,7 +5,7 @@ using NetTopologySuite.Geometries;
 //using Newtonsoft.Json;
 
 namespace ApiServer.Models;
-public class Prayer  
+public class PrayerMd:DateBase  
     {  
         public int id { get; set; }  
        // public int userId { get; set; }  

@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ApiServer.Migrations
 {
-    public partial class initial : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -52,25 +52,63 @@ namespace ApiServer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Properties",
+                name: "TestCities",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    area = table.Column<MultiPolygon>(type: "geometry", nullable: true),
+                    createdUtcDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updatedUtcDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    name = table.Column<string>(type: "text", nullable: false),
+                    hasService = table.Column<bool>(type: "boolean", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TestCities", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TestPosts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TestPosts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TestPrayers",
                 columns: table => new
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     address = table.Column<string>(type: "text", nullable: false),
-                    size = table.Column<int>(type: "integer", nullable: false),
-                    sizeUnit = table.Column<string>(type: "text", nullable: false),
-                    price = table.Column<long>(type: "bigint", nullable: false),
-                    isRentOnly = table.Column<bool>(type: "boolean", nullable: false),
-                    isCommercial = table.Column<bool>(type: "boolean", nullable: false),
                     name = table.Column<string>(type: "text", nullable: false),
-                    isOwner = table.Column<bool>(type: "boolean", nullable: false),
+                    content = table.Column<string>(type: "text", nullable: false),
                     point = table.Column<Point>(type: "geometry", nullable: false),
-                    imageUrls = table.Column<List<string>>(type: "text[]", nullable: false)
+                    imageUrls = table.Column<List<string>>(type: "text[]", nullable: false),
+                    createdUtcDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updatedUtcDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Properties", x => x.id);
+                    table.PrimaryKey("PK_TestPrayers", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TestTags",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TestTags", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -179,6 +217,30 @@ namespace ApiServer.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "PostTag",
+                columns: table => new
+                {
+                    PostsId = table.Column<int>(type: "integer", nullable: false),
+                    TagsId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostTag", x => new { x.PostsId, x.TagsId });
+                    table.ForeignKey(
+                        name: "FK_PostTag_TestPosts_PostsId",
+                        column: x => x.PostsId,
+                        principalTable: "TestPosts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PostTag_TestTags_TagsId",
+                        column: x => x.TagsId,
+                        principalTable: "TestTags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -215,6 +277,11 @@ namespace ApiServer.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostTag_TagsId",
+                table: "PostTag",
+                column: "TagsId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -235,13 +302,25 @@ namespace ApiServer.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Properties");
+                name: "PostTag");
+
+            migrationBuilder.DropTable(
+                name: "TestCities");
+
+            migrationBuilder.DropTable(
+                name: "TestPrayers");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "TestPosts");
+
+            migrationBuilder.DropTable(
+                name: "TestTags");
         }
     }
 }

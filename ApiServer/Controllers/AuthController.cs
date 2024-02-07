@@ -1,4 +1,4 @@
-using ApiServer.Models;
+using ApiServer.Models.DTO;
 using ApiServer.Repository.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
