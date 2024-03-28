@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Data;
+using WebApp.AccessLayer;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,10 @@ var connectionString = builder.Configuration.GetConnectionString("DbApiServer");
 builder.Services.AddDbContext<AppDbContext>(opt=>opt.UseNpgsql(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+
+builder.Services.AddSingleton<InMemoryUserDataAccess>();
+builder.Services.AddTransient<IUserStore<IdentityUser>, InMemoryUserStore>();
+
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>{
     options.SignIn.RequireConfirmedAccount = false;
     options.Password.RequireDigit=false;
@@ -17,8 +22,10 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>{
     options.Password.RequireNonAlphanumeric=false;
     options.Password.RequireLowercase=false;
     options.Password.RequireUppercase=false;
-} )
-    .AddEntityFrameworkStores<AppDbContext>();
+} ).AddEntityFrameworkStores<AppDbContext>();
+
+
+
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
