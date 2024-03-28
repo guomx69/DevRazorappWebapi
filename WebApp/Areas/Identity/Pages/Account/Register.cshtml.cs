@@ -26,7 +26,7 @@ namespace WebApp.Areas.Identity.Pages.Account
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IUserStore<IdentityUser> _userStore;
-        private readonly IUserEmailStore<IdentityUser> _phoneStore;
+        private readonly IUserPhoneNumberStore<IdentityUser> _phoneStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly  IEmailSender _emailSender;
 
@@ -34,9 +34,7 @@ namespace WebApp.Areas.Identity.Pages.Account
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
-            ILogger<RegisterModel> logger,
-
-            IEmailSender emailSender
+            ILogger<RegisterModel> logger, IEmailSender emailSender
             )
         {
             _userManager = userManager;
@@ -76,15 +74,10 @@ namespace WebApp.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            // [Required]
-            // [Phone]
-            // [Display(Name = "Phone")]
-            // public string Phone { get; set; }
-
             [Required]
-            //[Email]
-            [Display(Name = "Email")]
-            public string Email { get; set; }
+            [Phone]
+            [Display(Name = "Phone")]
+            public string Phone { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -121,18 +114,17 @@ namespace WebApp.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
-                //await _userStore.SetUserNameAsync(user, Input.Phone, CancellationToken.None);
-                //await _phoneStore.SetPhoneNumberAsync(user, Input.Phone, CancellationToken.None);
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                await _phoneStore.SetEmailAsync(user, Input.Email, CancellationToken.None); 
+                await _userStore.SetUserNameAsync(user, Input.Phone, CancellationToken.None);
+                await _phoneStore.SetPhoneNumberAsync(user, Input.Phone, CancellationToken.None);
+               
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
                    
-                        //var  signinResult = await _signInManager.PasswordSignInAsync(Input.Phone, Input.Password,true, lockoutOnFailure: false);
-                        var  signinResult = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password,true, lockoutOnFailure: false);
+                        var  signinResult = await _signInManager.PasswordSignInAsync(Input.Phone, Input.Password,true, lockoutOnFailure: false);
+                
                         if (signinResult.Succeeded)
                         {
                             _logger.LogInformation("User logged in.");
@@ -143,27 +135,7 @@ namespace WebApp.Areas.Identity.Pages.Account
                         System.Console.WriteLine("Resulit::::::::::UserId::"+userId);
                         return LocalRedirect(returnUrl);
                         
-                   // return RedirectToPage("/Account/Login");
-                //   var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                //    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                //     var callbackUrl = Url.Page(
-                //         "/Account/ConfirmEmail",
-                //         pageHandler: null,
-                //         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                //         protocol: Request.Scheme);
-
-                //     await _emailSender.SendEmailAsync(Input.Phone, "Confirm your phone",
-                //         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                //     if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                //     {
-                //         return RedirectToPage("RegisterConfirmation", new { phone = Input.Phone, returnUrl = returnUrl });
-                //     }
-                //     else
-                //     {
-                //         await _signInManager.SignInAsync(user, isPersistent: false);
-                //         return LocalRedirect(returnUrl);
-                //     }
+                  
                 }
                 foreach (var error in result.Errors)
                 {
@@ -189,13 +161,13 @@ namespace WebApp.Areas.Identity.Pages.Account
             }
         }
 
-        private IUserEmailStore<IdentityUser> GetPhoneStore()
+        private IUserPhoneNumberStore<IdentityUser> GetPhoneStore()
         {
-            if (!_userManager.SupportsUserEmail)// if (!_userManager.SupportsUserPhoneNumber)
+            if (!_userManager.SupportsUserPhoneNumber)
             {
                 throw new NotSupportedException("The default UI requires a user store with phone support.");
             }
-            return (IUserEmailStore<IdentityUser>)_userStore;
+            return (IUserPhoneNumberStore<IdentityUser>)_userStore;
         }
     }
 }

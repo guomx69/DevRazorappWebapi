@@ -19,9 +19,9 @@ namespace WebApp.AccessLayer;
             return _users.FirstOrDefault(u => u.Id == id);
         }
 
-        public IdentityUser GetByEmail(string email)
+        public IdentityUser GetByPhoneNumber(string phone)
         {
-            return _users.FirstOrDefault(u => u.NormalizedEmail == email);
+            return _users.FirstOrDefault(u => u.PhoneNumber == phone);
         }
 
         public IdentityUser GetUserByUsername(string username)

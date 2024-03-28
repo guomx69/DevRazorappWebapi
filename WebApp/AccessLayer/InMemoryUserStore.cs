@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 
 namespace WebApp.AccessLayer;
-public class InMemoryUserStore : IUserPasswordStore<IdentityUser>, IUserEmailStore<IdentityUser>
+public class InMemoryUserStore : IUserPasswordStore<IdentityUser>, IUserPhoneNumberStore<IdentityUser>
     {
         private InMemoryUserDataAccess _dataAccess;
         public InMemoryUserStore(InMemoryUserDataAccess da)
@@ -35,11 +35,11 @@ public class InMemoryUserStore : IUserPasswordStore<IdentityUser>, IUserEmailSto
 
         }
 
-        public Task<IdentityUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+        public Task<IdentityUser> FindByPhoneNumberAsync(string normalizedPhoneNumber, CancellationToken cancellationToken)
         {
             return Task<IdentityUser>.Run(() =>
             {
-                return _dataAccess.GetByEmail(normalizedEmail);
+                return _dataAccess.GetByPhoneNumber(normalizedPhoneNumber);
             });
         }
 
@@ -59,29 +59,29 @@ public class InMemoryUserStore : IUserPasswordStore<IdentityUser>, IUserEmailSto
             });
         }
 
-        public Task<string> GetEmailAsync(IdentityUser user, CancellationToken cancellationToken)
+        public Task<string> GetPhoneNumberAsync(IdentityUser user, CancellationToken cancellationToken)
         {
                 return Task<string>.Run(() =>
                 {
-                    return user.Email;
+                    return user.PhoneNumber;
                 });
         }
 
-        public Task<bool> GetEmailConfirmedAsync(IdentityUser user, CancellationToken cancellationToken)
+        public Task<bool> GetPhoneNumberConfirmedAsync(IdentityUser user, CancellationToken cancellationToken)
         {
             return Task<bool>.Run(() =>
             {
-                return user.EmailConfirmed;
+                return user.PhoneNumberConfirmed;
             });
         }
 
-        public Task<string> GetNormalizedEmailAsync(IdentityUser user, CancellationToken cancellationToken)
-        {
-            return Task<string>.Run(() =>
-            {
-                return user.NormalizedEmail;
-            });
-        }
+        // public Task<string> GetNormalizedPhoneNumberAsync(IdentityUser user, CancellationToken cancellationToken)
+        // {
+        //     return Task<string>.Run(() =>
+        //     {
+        //         return user.NormalizedPhoneNumber;
+        //     });
+        // }
 
         public Task<string> GetNormalizedUserNameAsync(IdentityUser user, CancellationToken cancellationToken)
         {
@@ -117,28 +117,28 @@ public class InMemoryUserStore : IUserPasswordStore<IdentityUser>, IUserEmailSto
             return Task<bool>.Run(() => { return true; });
         }
 
-        public Task SetEmailAsync(IdentityUser user, string email, CancellationToken cancellationToken)
+        public Task SetPhoneNumberAsync(IdentityUser user, string phone, CancellationToken cancellationToken)
         {
             return Task.Run(() => {
-                user.Email = email;
+                user.PhoneNumber = phone;
             });
         }
 
-        public Task SetEmailConfirmedAsync(IdentityUser user, bool confirmed, CancellationToken cancellationToken)
+        public Task SetPhoneNumberConfirmedAsync (IdentityUser user, bool confirmed, CancellationToken cancellationToken)
         {
             return Task.Run(() =>
             {
-                user.EmailConfirmed = confirmed;
+                user.PhoneNumberConfirmed = confirmed;
             });
         }
 
-        public Task SetNormalizedEmailAsync(IdentityUser user, string normalizedEmail, CancellationToken cancellationToken)
-        {
-            return Task.Run(() =>
-            {
-                user.NormalizedEmail = normalizedEmail;
-            });
-        }
+        // public Task SetNormalizedPhoneNumberAsync(IdentityUser user, string normalizedPhoneNumber, CancellationToken cancellationToken)
+        // {
+        //     return Task.Run(() =>
+        //     {
+        //         user.NormalizedPhoneNumber = normalizedPhoneNumber;
+        //     });
+        // }
 
         public Task SetNormalizedUserNameAsync(IdentityUser user, string normalizedName, CancellationToken cancellationToken)
         {
