@@ -1,7 +1,7 @@
     
 using Microsoft.AspNetCore.Identity;
 namespace WebApp.AccessLayer;
-    public class InMemoryUserDataAccess
+    public class InMemoryUserDataAccess //:IUserDataAccess
     {
         private List<IdentityUser> _users;
         public InMemoryUserDataAccess()

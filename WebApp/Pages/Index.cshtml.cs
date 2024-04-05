@@ -15,5 +15,9 @@ public class IndexModel : PageModel
     public void OnGet()
     {
 
+            if(User.Identity.IsAuthenticated){
+                 bool isAdmin=User.IsInRole("admin"); 
+                 System.Console.WriteLine("Is User Authenticated:::: "+ isAdmin);   
+            }
     }
 }

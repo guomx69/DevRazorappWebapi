@@ -1,12 +1,13 @@
 using ApiServer.Models.DTO;
 using ApiServer.Repository.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace ApiServer.Api.Controllers;
 
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -34,6 +35,13 @@ namespace ApiServer.Api.Controllers;
 
             return BadRequest("Registration failed.");
         }
+        [HttpPost("RegisterIUser")]
+        public async Task<bool> RegisterUser(IdentityUser user)
+        {
+           
+            var success = await _authService.RegisterUser(user);
+               return success;
+        }
 
         [HttpPost("Login")]
         public async Task<IActionResult> Login( LoginUser user)
@@ -51,5 +59,26 @@ namespace ApiServer.Api.Controllers;
             }
 
             return BadRequest("Login failed.");
+        }
+        [HttpGet("GetIUserById/{id}")]
+        public async Task<IdentityUser> GetIuser(string id)
+        {
+           
+            return  await _authService.GetIUserById(id);
+               
+        }
+         [HttpGet("GetIUserByPhone/{phone}")]
+        public async Task<IdentityUser> GetIuserByPhoneNum(string phone)
+        {
+           
+            return  await _authService.GetIUserByPhone(phone);
+               
+        }
+        [HttpGet("GetIUserByUsername/{username}")]
+        public async Task<IdentityUser> GetIuserByUsername(string username)
+        {
+           
+            return  await _authService.GetIUserByUsername(username);
+               
         }
     }

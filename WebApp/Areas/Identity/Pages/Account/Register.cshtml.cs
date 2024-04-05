@@ -123,17 +123,17 @@ namespace WebApp.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
                    
-                        var  signinResult = await _signInManager.PasswordSignInAsync(Input.Phone, Input.Password,true, lockoutOnFailure: false);
+                    var  signinResult = await _signInManager.PasswordSignInAsync(Input.Phone, Input.Password,true, lockoutOnFailure: false);
                 
-                        if (signinResult.Succeeded)
-                        {
-                            _logger.LogInformation("User logged in.");
-                            return LocalRedirect(returnUrl);
-                        }
-             
-                       var userId = await _userManager.GetUserIdAsync(user);
-                        System.Console.WriteLine("Resulit::::::::::UserId::"+userId);
+                    if (signinResult.Succeeded)
+                    {
+                        _logger.LogInformation("User logged in.");
                         return LocalRedirect(returnUrl);
+                    }
+             
+                    var userId = await _userManager.GetUserIdAsync(user);
+                    System.Console.WriteLine("Resulit::::::::::UserId::"+userId);
+                    return LocalRedirect(returnUrl);
                         
                   
                 }

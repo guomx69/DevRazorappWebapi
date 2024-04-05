@@ -1,19 +1,18 @@
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using WebApp.Data;
+//using Microsoft.EntityFrameworkCore;
+
 using WebApp.AccessLayer;
 
 
 var builder = WebApplication.CreateBuilder(args);
+// builder.Logging.ClearProviders();
+// builder.Logging.AddConsole();
 
-// Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DbApiServer");
-builder.Services.AddDbContext<AppDbContext>(opt=>opt.UseNpgsql(connectionString));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddSingleton<ApiUserDataAccess>();
+builder.Services.AddTransient<IUserStore<IdentityUser>, ApiUserStore>();
 
-
-builder.Services.AddSingleton<InMemoryUserDataAccess>();
-builder.Services.AddTransient<IUserStore<IdentityUser>, InMemoryUserStore>();
+// builder.Services.AddSingleton<InMemoryUserDataAccess>();
+// builder.Services.AddTransient<IUserStore<IdentityUser>, InMemoryUserStore>();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>{
     options.SignIn.RequireConfirmedAccount = false;
@@ -22,9 +21,13 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>{
     options.Password.RequireNonAlphanumeric=false;
     options.Password.RequireLowercase=false;
     options.Password.RequireUppercase=false;
-} ).AddEntityFrameworkStores<AppDbContext>();
+} );//.AddEntityFrameworkStores<AppDbContext>();
 
-
+//https://stackoverflow.com/questions/56390914/when-using-services-addhttpclient-where-is-the-httpclient-created
+builder.Services.AddHttpClient("test.online").ConfigurePrimaryHttpMessageHandler(_ => new HttpClientHandler //localhost
+            {
+               ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; }
+            });
 
 builder.Services.AddRazorPages();
 
@@ -34,6 +37,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
+    
 }
 else
 {

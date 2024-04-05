@@ -18,3 +18,7 @@ git push -u origin main
 
 #===================================
  Security Problems
+
+
+#Assign a Role to a user
+INSERT INTO public."AspNetUserRoles" select u."Id" ,r."Id"  from public."AspNetRoles" r, public."AspNetUsers" u where r."Name"  = 'admin' and u."UserName"  = '8326667777'

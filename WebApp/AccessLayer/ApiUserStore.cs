@@ -1,40 +1,28 @@
 using Microsoft.AspNetCore.Identity;
 
 namespace WebApp.AccessLayer;
-public class InMemoryUserStore : IUserPasswordStore<IdentityUser>, IUserPhoneNumberStore<IdentityUser>
+public class ApiUserStore : IUserPasswordStore<IdentityUser>, IUserPhoneNumberStore<IdentityUser>
     {
-        private InMemoryUserDataAccess _dataAccess;
-        public InMemoryUserStore(InMemoryUserDataAccess da)
+        private ApiUserDataAccess _dataAccess;
+        public ApiUserStore(ApiUserDataAccess da)
         {
             _dataAccess = da;
         }
 
-        public Task<IdentityResult> CreateAsync(IdentityUser user, CancellationToken cancellationToken)
+        public async Task<IdentityResult> CreateAsync(IdentityUser user, CancellationToken cancellationToken)
         {
-            return Task<IdentityResult>.Run(() =>
+            //return Task<IdentityResult>.Run(async () =>  {
+            IdentityResult result = IdentityResult.Failed();
+            bool createResult =await _dataAccess.CreateUserAsync(user);
+
+            if (createResult)
             {
-                IdentityResult result = IdentityResult.Failed();
-                bool createResult = _dataAccess.CreateUser(user);
+                result = IdentityResult.Success;
+            }
 
-                if (createResult)
-                {
-                    result = IdentityResult.Success;
-                }
-
-                return result;
-            });
+            return result;
+            //});
         }
-
-        public Task<IdentityResult> DeleteAsync(IdentityUser user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Dispose()
-        {
-
-        }
-
         public Task<IdentityUser> FindByPhoneNumberAsync(string normalizedPhoneNumber, CancellationToken cancellationToken)
         {
             return Task<IdentityUser>.Run(() =>
@@ -59,6 +47,17 @@ public class InMemoryUserStore : IUserPasswordStore<IdentityUser>, IUserPhoneNum
             });
         }
 
+
+
+
+        public Task<IdentityResult> DeleteAsync(IdentityUser user, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+        public void Dispose()
+        {
+
+        }
         public Task<string> GetPhoneNumberAsync(IdentityUser user, CancellationToken cancellationToken)
         {
                 return Task<string>.Run(() =>

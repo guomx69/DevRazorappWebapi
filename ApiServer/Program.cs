@@ -15,7 +15,14 @@ builder.Services.AddDbContext<AppDbContext>(opt=>
           opt.UseNpgsql(builder.Configuration.GetConnectionString("DbApiServer"), pt=>pt.UseNetTopologySuite()));
           
  builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
-                { options.Password.RequiredLength = 5;
+                { 
+                     options.SignIn.RequireConfirmedAccount = false;
+                    options.Password.RequireDigit=false;
+                    options.Password.RequiredLength=3;
+                    options.Password.RequireNonAlphanumeric=false;
+                    options.Password.RequireLowercase=false;
+                    options.Password.RequireUppercase=false;
+
                 }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 
  builder.Services.AddAuthentication(options =>
@@ -53,6 +60,12 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    SeedData.Initialize(services);
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -60,7 +73,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();

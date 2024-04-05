@@ -34,6 +34,29 @@ namespace ApiServer.Repository.Service;
             var result = await _userManager.CreateAsync(identityUser, user.Password);
             return result.Succeeded;
         }
+        public async Task<bool> RegisterUser(IdentityUser user)
+        {
+          
+            var result = await _userManager.CreateAsync(user); //user already has the hashed password, not need any more.
+            return result.Succeeded;
+        }
+
+
+        public async Task<IdentityUser> GetIUserById( string id)
+        {
+          
+           return await _userManager.FindByIdAsync(id);
+        }
+        public async Task<IdentityUser> GetIUserByPhone( string phone)
+        {
+          
+           return await _userManager.FindByNameAsync(phone);
+        }
+         public async Task<IdentityUser> GetIUserByUsername( string username)
+        {
+          
+           return await _userManager.FindByNameAsync(username);
+        }
 
         public async Task<bool> Login(LoginUser user)
         {
