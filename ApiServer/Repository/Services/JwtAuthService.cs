@@ -15,11 +15,13 @@ namespace ApiServer.Repository.Service;
     public class JwtAuthService : IAuthService
     {
          private readonly UserManager<IdentityUser> _userManager;
+         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _config;
 
-        public JwtAuthService(UserManager<IdentityUser> userManager, IConfiguration config)
+        public JwtAuthService(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager,IConfiguration config)
         {
             _userManager = userManager;
+            _roleManager=roleManager;
             _config = config;
         }
 
@@ -39,6 +41,7 @@ namespace ApiServer.Repository.Service;
           
             var result = await _userManager.CreateAsync(user); //user already has the hashed password, not need any more.
             return result.Succeeded;
+             //if (result.Succeeded) await _userManager.AddToRoleAsync(user, "Admin");
         }
 
 
@@ -91,5 +94,49 @@ namespace ApiServer.Repository.Service;
             string tokenString = new JwtSecurityTokenHandler().WriteToken(securityToken);
             return tokenString;
         }
+
+
+
+       
+        public async Task<bool> AddRole(IdentityRole role)
+        {
+            var result = await _roleManager.CreateAsync(role); //user already has the hashed password, not need any more.
+            return result.Succeeded;
+           
+        }
+
+       
+        public async Task<IdentityRole> GetIRoleById(string id)
+        {
+           
+            return await _roleManager.FindByIdAsync(id);
+               
+        }
+        public async Task<IdentityRole> GetIRoleByName(string rolename)
+        {
+           
+           return await _roleManager.FindByNameAsync(rolename);
+               
+        }
+
+        public async Task<bool> IsInRole(string userId, string roleName)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user is null)
+            {
+                return false;
+            }
+            return await _userManager.IsInRoleAsync(user, roleName);
+        }
+         public async Task<List<string>> GetRolesAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user is null)
+            {
+                return new List<string>();
+            }
+            return new List<string>(await _userManager.GetRolesAsync(user));
+        }
+        
     }
 

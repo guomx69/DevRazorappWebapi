@@ -19,5 +19,14 @@ namespace ApiServer.Repository.Interfaces
 
         //create GenerateToken method with parameter LoginUser user and return string   
         string GenerateToken(LoginUser user);
+
+        
+        Task<bool> AddRole(IdentityRole role);
+        Task<IdentityRole> GetIRoleById(string id);
+        Task<IdentityRole> GetIRoleByName(string rolename);
+
+        Task<bool> IsInRole(string userId, string role);
+        Task<List<string>> GetRolesAsync(string userId);
+       
     }
 }

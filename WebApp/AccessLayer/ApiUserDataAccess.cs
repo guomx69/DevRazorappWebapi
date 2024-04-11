@@ -33,6 +33,36 @@ namespace WebApp.AccessLayer;
             }
             return apiResponse;
         }
+         
+
+         public async Task<bool> IsInRole(string userId, string rolename)
+        {
+            bool apiResponse=false; 
+            using (var httpClient = _clientFactory.CreateClient(_apiUrl)) //localhost:7024
+            {
+                using (HttpResponseMessage response = await httpClient.GetAsync(_apiUrl+"/auth/IsInRole/"+userId+"/"+rolename))
+                {
+                    //apiResponse = await response.Content.ReadAsStringAsync<bool>();
+                    apiResponse=response.IsSuccessStatusCode;
+                }
+            }
+            return apiResponse;
+        }
+        
+         public async Task<IList<string>> GetRolesAsync (string userId)
+         {
+             IList<string> apiResponse=null; 
+            using (var httpClient = _clientFactory.CreateClient(_apiUrl)) //localhost:7024
+            {
+                using (HttpResponseMessage response = await httpClient.GetAsync(_apiUrl+"/auth/GetRolesAsync/"+userId))
+                {
+                   apiResponse = await response.Content.ReadFromJsonAsync<IList<string>> ();
+                  
+                }
+            }
+            return apiResponse;
+         }
+
         public bool Update(IdentityUser user)
         {
             // Since get user gets the user from the same in-memory list,

@@ -81,4 +81,40 @@ namespace ApiServer.Api.Controllers;
             return  await _authService.GetIUserByUsername(username);
                
         }
+
+        [HttpGet("CreateRole/{id}")]
+        public async Task<IdentityUser> CreateRole(string id)
+        {
+           
+            return  await _authService.GetIUserById(id);
+               
+        }
+        [HttpGet("IsInRole/{userId}/{rolename}")]
+        public async Task<bool> IsInRole(string userId, string rolename)
+        {
+           
+            var success = await _authService.IsInRole(userId, rolename);
+               return success;
+        }
+
+        [HttpGet("GetIRoleById/{id}")]
+        public async Task<IdentityRole> GetIRoleById(string id)
+        {
+           
+            return  await _authService.GetIRoleById(id);
+               
+        }
+        [HttpGet("GetIRoleByName/{rolename}")]
+        public async Task<IdentityRole> GetIRoleByName(string rolename)
+        {
+           
+            return  await _authService.GetIRoleByName(rolename);
+               
+        } 
+        [HttpGet("GetRolesAsync/{userId}")]
+        public async Task<List<string>> GetRolesAsync(string userId)
+        {
+            return  await _authService.GetRolesAsync(userId);
+            
+        }
     }

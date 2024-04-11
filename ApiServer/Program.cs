@@ -14,9 +14,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(opt=>
           opt.UseNpgsql(builder.Configuration.GetConnectionString("DbApiServer"), pt=>pt.UseNetTopologySuite()));
           
- builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+ builder.Services.AddIdentity<IdentityUser,IdentityRole>(options =>
                 { 
-                     options.SignIn.RequireConfirmedAccount = false;
+                    options.SignIn.RequireConfirmedAccount = false;
                     options.Password.RequireDigit=false;
                     options.Password.RequiredLength=3;
                     options.Password.RequireNonAlphanumeric=false;

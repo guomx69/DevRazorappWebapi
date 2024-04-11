@@ -1,5 +1,6 @@
     
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration.UserSecrets;
 namespace WebApp.AccessLayer;
     interface IUserDataAccess
     {
@@ -14,5 +15,7 @@ namespace WebApp.AccessLayer;
         public  Task<IdentityUser> GetUserByUsername(string username);
         public string GetNormalizedUsername(IdentityUser user);
         public bool Update(IdentityUser user);
+
+        public Task<bool> IsInRole(string userId, string rolename);
 
     }

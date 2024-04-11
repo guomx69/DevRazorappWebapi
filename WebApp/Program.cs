@@ -11,6 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<ApiUserDataAccess>();
 builder.Services.AddTransient<IUserStore<IdentityUser>, ApiUserStore>();
 
+builder.Services.AddSingleton<ApiRoleDataAccess>();
+builder.Services.AddTransient<IRoleStore<IdentityRole>, ApiRoleStore>();
+
 // builder.Services.AddSingleton<InMemoryUserDataAccess>();
 // builder.Services.AddTransient<IUserStore<IdentityUser>, InMemoryUserStore>();
 
@@ -21,7 +24,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>{
     options.Password.RequireNonAlphanumeric=false;
     options.Password.RequireLowercase=false;
     options.Password.RequireUppercase=false;
-} );//.AddEntityFrameworkStores<AppDbContext>();
+} ).AddRoles<IdentityRole>(); //.AddDefaultIdentity<IdentityUser>.AddRoles<IdentityRole>();//.AddEntityFrameworkStores<AppDbContext>();.AddIdentity<IdentityUser,IdentityRole>
+
 
 //https://stackoverflow.com/questions/56390914/when-using-services-addhttpclient-where-is-the-httpclient-created
 builder.Services.AddHttpClient("test.online").ConfigurePrimaryHttpMessageHandler(_ => new HttpClientHandler //localhost

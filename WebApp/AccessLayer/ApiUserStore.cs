@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 
 namespace WebApp.AccessLayer;
-public class ApiUserStore : IUserPasswordStore<IdentityUser>, IUserPhoneNumberStore<IdentityUser>
+public class ApiUserStore : IUserPasswordStore<IdentityUser>, IUserPhoneNumberStore<IdentityUser>,IUserRoleStore<IdentityUser> 
     {
         private ApiUserDataAccess _dataAccess;
         public ApiUserStore(ApiUserDataAccess da)
@@ -47,6 +47,38 @@ public class ApiUserStore : IUserPasswordStore<IdentityUser>, IUserPhoneNumberSt
             });
         }
 
+        public Task AddToRoleAsync (IdentityUser user, string roleName, System.Threading.CancellationToken cancellationToken)
+        {
+              throw new NotImplementedException();
+        }
+         public Task RemoveFromRoleAsync (IdentityUser user, string roleName, System.Threading.CancellationToken cancellationToken)
+        {
+              throw new NotImplementedException();
+        }
+        public Task<IList<string>> GetRolesAsync (IdentityUser user, System.Threading.CancellationToken cancellationToken)
+         
+        {
+              //throw new NotImplementedException();
+               return Task<IdentityUser>.Run(() =>
+            {
+                return _dataAccess.GetRolesAsync(user.Id);
+            });
+        }
+        public Task<bool> IsInRoleAsync (IdentityUser user,string role, System.Threading.CancellationToken cancellationToken)
+         
+        {
+              //throw new NotImplementedException();
+              return Task<IdentityUser>.Run(() =>
+            {
+                return _dataAccess.IsInRole(user.Id,role);
+            });
+        }
+        public Task<IList<IdentityUser>> GetUsersInRoleAsync (string role, System.Threading.CancellationToken cancellationToken)
+         
+        {
+              throw new NotImplementedException();
+                
+        }
 
 
 
@@ -54,6 +86,7 @@ public class ApiUserStore : IUserPasswordStore<IdentityUser>, IUserPhoneNumberSt
         {
             throw new NotImplementedException();
         }
+        
         public void Dispose()
         {
 
